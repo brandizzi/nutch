@@ -184,6 +184,7 @@ public class HttpFormAuthentication {
 
   private String httpGetPageContent(String url) throws IOException {
 
+    LOG.debug("Fetching " + url + " to POST auth.");
     GetMethod get = new GetMethod(url);
     try {
       for (Entry<String, String> entry : authConfigurer
@@ -196,6 +197,7 @@ public class HttpFormAuthentication {
         setCookies(cookieHeader.getValue());
       }
       String rst = IOUtils.toString(get.getResponseBodyAsStream());
+      LOG.debug("Result" + rst);
       return rst;
     } finally {
       get.releaseConnection();
