@@ -63,6 +63,7 @@ public class HttpFormAuthentication {
   private HttpClient client;
   private HttpFormAuthConfigurer authConfigurer = new HttpFormAuthConfigurer();
   private String cookies;
+  private String postURL;
 
   public HttpFormAuthentication(HttpFormAuthConfigurer authConfigurer,
       HttpClient client, Http http) {
@@ -93,7 +94,7 @@ public class HttpFormAuthentication {
     CookieHandler.setDefault(new CookieManager());
     String pageContent = httpGetPageContent(authConfigurer.getLoginUrl());
     List<NameValuePair> params = getLoginFormParams(pageContent);
-    sendPost(authConfigurer.getLoginUrl(), params);
+    sendPost(postURL, params);
   }
 
   private void sendPost(String url, List<NameValuePair> params)
@@ -236,6 +237,13 @@ public class HttpFormAuthentication {
         .entrySet()) {
       params.add(new NameValuePair(entry.getKey(), entry.getValue()));
     }
+
+    postURL = loginform.attr("action");
+
+    if ((postURL == null) || postURL.isEmpty()) {
+        postURL = authConfigurer.getLoginUrl();
+    }
+
     return params;
   }
 
